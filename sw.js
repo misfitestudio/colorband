@@ -1,5 +1,5 @@
 const CACHE = 'colorband-v1';
-const ASSETS = ['/', '/index.html', '/manifest.json', '/icons/icon-192.svg', '/icons/icon-512.svg'];
+const ASSETS = ['/colorband/', '/colorband/index.html', '/colorband/manifest.json', '/colorband/icons/icon-192.svg', '/colorband/icons/icon-512.svg'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));

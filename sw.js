@@ -1,4 +1,4 @@
-const CACHE = 'colorband-v4';
+const CACHE = 'colorband-v5';
 const ASSETS = ['/colorband/', '/colorband/index.html', '/colorband/manifest.json', '/colorband/icons/icon-192.svg', '/colorband/icons/icon-512.svg'];
 
 self.addEventListener('install', e => {

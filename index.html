@@ -4,80 +4,46 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
 <title>ColorBand</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="ColorBand">
-  <link rel="apple-touch-icon" href="icons/icon-192.svg">
-  <meta name="theme-color" content="#111111">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ColorBand">
+<link rel="apple-touch-icon" href="icons/icon-192.svg">
+<meta name="theme-color" content="#111111">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600&display=swap');
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; width: 100%; background: #f2f2f2; overflow: hidden; user-select: none; touch-action: none; }
   body { display: flex; flex-direction: column; align-items: center; }
-
-  #top-bar {
-    width: 100%; max-width: 480px;
-    padding: 12px 14px 10px;
-    flex-shrink: 0; background: #f2f2f2; z-index: 20;
-  }
+  #top-bar { width: 100%; max-width: 480px; padding: 12px 14px 10px; flex-shrink: 0; background: #f2f2f2; z-index: 20; }
   #target-pill {
-    width: 100%; height: 58px; border-radius: 18px;
-    border: 5px solid #111;
+    width: 100%; height: 58px; border-radius: 18px; border: 5px solid #111;
     display: flex; align-items: center; justify-content: center;
     font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 3px;
     color: rgba(0,0,0,0.45); background: #ddd; transition: background 0.25s;
   }
   #target-pill.pop { animation: pop 0.35s ease; }
   @keyframes pop { 0%{transform:scale(1)} 40%{transform:scale(1.05)} 100%{transform:scale(1)} }
-
-  #game-wrap {
-    width: 100%; max-width: 480px; flex: 1;
-    position: relative; overflow: hidden; background: #f2f2f2;
-  }
+  #game-wrap { width: 100%; max-width: 480px; flex: 1; position: relative; overflow: hidden; background: #f2f2f2; }
   canvas { display: block; position: absolute; top:0; left:0; width:100%; height:100%; }
-
-  #cd {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    z-index: 10; background: #f2f2f2;
-    transition: opacity 0.3s;
-  }
+  #cd { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 10; background: #f2f2f2; transition: opacity 0.3s; }
   #cd.hidden { opacity: 0; pointer-events: none; }
-  #cd-n {
-    font-family: 'Bebas Neue', sans-serif; font-size: 9rem; color: #222; line-height: 1;
-  }
+  #cd-n { font-family: 'Bebas Neue', sans-serif; font-size: 9rem; color: #222; line-height: 1; }
   #cd-n.tick { animation: cdtick 0.5s ease; }
   @keyframes cdtick { 0%{transform:scale(1.5);opacity:0.3} 100%{transform:scale(1);opacity:1} }
-
-  .ov {
-    position: fixed; inset: 0;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 20px; z-index: 300; padding: 32px; background: rgba(242,242,242,0.97);
-  }
+  .ov { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; z-index: 300; padding: 32px; background: rgba(242,242,242,0.97); }
   .ov h1 { font-family:'Bebas Neue',sans-serif; font-size:3.5rem; letter-spacing:6px; color:#111; }
   .ov p { font-family:'DM Sans',sans-serif; font-size:0.95rem; text-align:center; max-width:280px; line-height:1.7; color:#666; }
   .ov strong { color:#111; }
-  .big-btn {
-    padding:14px 52px; background:#111; color:#fff; border:none; border-radius:14px;
-    font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:3px; cursor:pointer;
-  }
+  .big-btn { padding:14px 52px; background:#111; color:#fff; border:none; border-radius:14px; font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:3px; cursor:pointer; }
   .stat-row { display:flex; gap:36px; text-align:center; }
   .stat-n { font-family:'Bebas Neue',sans-serif; font-size:3.5rem; line-height:1; color:#111; }
   .stat-l { font-family:'DM Sans',sans-serif; font-size:0.62rem; letter-spacing:3px; color:#aaa; text-transform:uppercase; margin-top:3px; }
   #diff-row { display:flex; gap:10px; }
-  .dbtn {
-    padding:9px 20px; border-radius:8px; border:3px solid #ddd;
-    background:transparent; color:#111;
-    font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:2px; cursor:pointer;
-  }
+  .dbtn { padding:9px 20px; border-radius:8px; border:3px solid #ddd; background:transparent; color:#111; font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:2px; cursor:pointer; }
   .dbtn.sel { border-color:#06D6A0; background:rgba(6,214,160,0.1); color:#08a87c; }
   .diff-row2 { display:flex; gap:10px; }
-  .dbtn2 {
-    padding:9px 20px; border-radius:8px; border:3px solid #ddd;
-    background:transparent; color:#111;
-    font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:2px; cursor:pointer;
-  }
+  .dbtn2 { padding:9px 20px; border-radius:8px; border:3px solid #ddd; background:transparent; color:#111; font-family:'Bebas Neue',sans-serif; font-size:1.05rem; letter-spacing:2px; cursor:pointer; }
   .dbtn2.sel { border-color:#06D6A0; background:rgba(6,214,160,0.1); color:#08a87c; }
   #flash { position:fixed; inset:0; pointer-events:none; z-index:200; opacity:0; }
   #flash.hit { animation: fhit 0.3s ease forwards; background:rgba(100,255,150,0.45); }
@@ -151,7 +117,6 @@ const ROWS_VISIBLE = 4;
 const SPEEDS = { slow: 108, normal: 186, fast: 293 };
 const SPEED_INCREASE = 0.10;
 let currentSpeed = 108;
-
 let speed = 'slow';
 let highScore = parseInt(localStorage.getItem('cb_highscore') || '0');
 let running = false;
@@ -172,8 +137,7 @@ function beep(freq, dur, vol, type) {
     if (AC.state === 'suspended') AC.resume();
     const o = AC.createOscillator();
     const g = AC.createGain();
-    o.connect(g);
-    g.connect(AC.destination);
+    o.connect(g); g.connect(AC.destination);
     o.type = type || 'square';
     o.frequency.setValueAtTime(freq, AC.currentTime);
     g.gain.setValueAtTime(vol, AC.currentTime);
@@ -288,11 +252,15 @@ function loop(ts) {
   lastTs = ts;
 
   const dy = currentSpeed * dt;
-
   for (const row of rows) row.y += dy;
 
   while (rows.length > 0 && rows[rows.length - 1].y > CH) {
-    rows.pop();
+    const escaped = rows.pop();
+    if (!escaped.hit) {
+      playMiss();
+      doGameOver();
+      return;
+    }
   }
 
   const topRow = rows[0];
@@ -310,20 +278,16 @@ canvas.addEventListener('pointerdown', onTap);
 function onTap(e) {
   if (!running) return;
   e.preventDefault();
-
   const rect = canvas.getBoundingClientRect();
   const tx = (e.clientX - rect.left) * (CW / rect.width);
   const ty = (e.clientY - rect.top)  * (CH / rect.height);
-
   let hit = null;
   for (const row of rows) {
     if (ty >= row.y && ty < row.y + BH) { hit = row; break; }
   }
   if (!hit) return;
-
   const j = Math.floor((tx - GAP) / (BW + GAP));
   if (j < 0 || j >= SEGS) return;
-
   const tapped = hit.segs[j];
   if (tapped.id === targetColor.id) {
     hit.hit = true;
@@ -347,14 +311,9 @@ function runCountdown(cb) {
   cdNEl.classList.remove('tick');
   void cdNEl.offsetWidth;
   cdNEl.classList.add('tick');
-
   function step() {
     n--;
-    if (n <= 0) {
-      cdEl.classList.add('hidden');
-      cb();
-      return;
-    }
+    if (n <= 0) { cdEl.classList.add('hidden'); cb(); return; }
     cdNEl.classList.remove('tick');
     void cdNEl.offsetWidth;
     cdNEl.textContent = n;
@@ -367,37 +326,25 @@ function runCountdown(cb) {
 function initGame() {
   document.getElementById('scr-start').style.display = 'none';
   document.getElementById('scr-go').style.display    = 'none';
-
   cancelAnimationFrame(afId);
   running = false;
   resize();
-
-  rows        = [];
-  lastTs      = null;
-  correctHits = 0;
-  totalHits   = 0;
-  totalSets   = 0;
-  targetColor = null;
-
+  rows = []; lastTs = null; correctHits = 0; totalHits = 0; totalSets = 0; targetColor = null;
   currentSpeed = SPEEDS[speed];
   pickTarget(true);
   pillEl.style.background = '#ddd';
   pillEl.textContent = '—';
-
   cdEl.classList.remove('hidden');
   cdNEl.textContent = '3';
-
   ctx.clearRect(0, 0, CW, CH);
   ctx.fillStyle = '#f2f2f2';
   ctx.fillRect(0, 0, CW, CH);
-
   rows.push(makeRow(-BH));
-
   runCountdown(() => {
     revealPill();
     running = true;
-    lastTs  = null;
-    afId    = requestAnimationFrame(loop);
+    lastTs = null;
+    afId = requestAnimationFrame(loop);
   });
 }
 

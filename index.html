@@ -254,9 +254,10 @@ function loop(ts) {
   const dy = currentSpeed * dt;
   for (const row of rows) row.y += dy;
 
-  while (rows.length > 0 && rows[rows.length - 1].y > CH) {
+  while (rows.length > 0 && rows[rows.length - 1].y >= CH) {
     const escaped = rows.pop();
-    if (!escaped.hit) {
+    if (!escaped.hit && running) {
+      running = false;
       playMiss();
       doGameOver();
       return;
